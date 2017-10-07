@@ -11,7 +11,7 @@ class Link_list {
         Link_list(void);
         void insert_node(item data);
         void delete_node(int searchUPC);
-        void traverse_list();
+        item traverse_list();
         item retrieve_node(int UPCsearch);
         bool is_empty();
         int list_count();

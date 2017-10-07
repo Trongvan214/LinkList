@@ -47,7 +47,7 @@ void Link_list::delete_node(int searchUPC)
     if(curr != NULL)
     {
         //loop until UPCcode found or end of nodes
-        while (curr != NULL && curr->return_structure().upc_code != searchUPC)
+        while (curr != NULL && !curr->compare_UPC(searchUPC))
         {
             prev = curr;
             curr = curr->return_next();
@@ -64,9 +64,9 @@ void Link_list::delete_node(int searchUPC)
             delete curr;
             //connect prev node to curr next
             prev->change_pointer(curr->return_next());
-            //decrease node count
-            len--;
         }
+        //decrease node count
+        len--;
     }
     else 
     {
@@ -77,7 +77,7 @@ item Link_list::retrieve_node(int searchUPC)
 {
     curr = head;
     //loop until last node or data found 
-    while (curr != NULL && curr->return_structure().upc_code != searchUPC)
+    while (curr != NULL && !curr->compare_UPC(searchUPC))
     {
         curr = curr->return_next();
     }
@@ -89,9 +89,9 @@ item Link_list::retrieve_node(int searchUPC)
     else
     {
         //in case when item not found
-        item cant_find;
-        cant_find.description = "Error404";
-        return cant_find; 
+        item error;
+        error.description = "Error404";
+        return error; 
     }
 }
 
@@ -110,14 +110,42 @@ int Link_list::list_count()
 {
     return len;
 }
-void Link_list::traverse_list()
+item Link_list::traverse_list()
 {
     curr = head;
+    int lowestUPC;
+    //loop through all nodes
 	while(curr != NULL)
     {
-        //process curr data
+        prev = curr;
+        //if 1 node
+        if(list_count() == 1)
+        {
+            lowestUPC = curr->return_UPC_code();
+        }
+        //if 0 node
+        else if(list_count() == 0)
+        {
+            cout << "This case is impossible" << endl;
+        }
+        //if more than 1
+        else 
+        {
+            Node* next = curr->return_next();
+            if(curr->return_UPC_code() > next->return_UPC_code())
+            {
+                lowestUPC = next->return_UPC_code();
+            }
+            else 
+            {
+                lowestUPC = curr->return_UPC_code();
+            }
+        }
         curr = curr->return_next();
     }
+    //return node with the lowest UPC value;
+    return retrieve_node(lowestUPC); 
+
 }
 /*void Link_list::destroy_list()
 {
@@ -132,4 +160,5 @@ void Link_list::traverse_list()
 	head = NULL;
 	count = 0;
 }*/
+
 

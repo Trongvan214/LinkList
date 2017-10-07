@@ -141,6 +141,7 @@ Number of nodes – call list count function
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <iomanip>
 
 #include "link_list.hpp"
 #include "node.hpp"
@@ -150,6 +151,7 @@ void program();
 void ask_info(item *new_item);
 void search_list(Link_list *list,int choice = 0);
 void print_item(item data);
+void sort_and_print(Link_list list);
 //void putInFile();
 
 using namespace std;
@@ -164,7 +166,33 @@ int main()
     else
     {
         printMenu();
-        program();
+        Link_list grocery_list;
+        int user_input;
+        do
+        {
+            cout << "Enter Menu Choices (1-5)" << endl;
+            cin >> user_input;
+            if(user_input == 1)
+            {
+                item new_item;
+                ask_info(&new_item);
+                grocery_list.insert_node(new_item);
+            }
+            else if(user_input == 2)
+            {
+                //past in choice 1 for delete
+                search_list(&grocery_list,1);
+            }
+            else if(user_input == 3)
+            {
+                search_list(&grocery_list);
+            }
+            else if(user_input == 4)
+            {
+                //print out all items
+                sort_and_print(grocery_list);
+            }
+        } while(user_input != 5);
         //putInFile();
     } 
 }
@@ -178,35 +206,6 @@ void printMenu()
     cout << "5) exit the program" << endl;
 }
 
-void program()
-{
-    Link_list grocery_list;
-    int user_input;
-    do
-    {
-        cout << "Enter 1-5" << endl;
-        cin >> user_input;
-        if(user_input == 1)
-        {
-            item new_item;
-            ask_info(&new_item);
-            grocery_list.insert_node(new_item);
-        }
-        else if(user_input == 2)
-        {
-            //past in choice 1 for delete
-            search_list(&grocery_list,1);
-        }
-        else if(user_input == 3)
-        {
-            search_list(&grocery_list);
-        }
-        else if(user_input == 4)
-        {
-            //print out all items
-        }
-    } while(user_input != 5);
-}
 void ask_info(item *new_item)
 {
     cout << "Enter UPC code: ";
@@ -253,15 +252,31 @@ void print_item(item data)
     }
     else 
     {
-        cout << "UPC " << data.upc_code << "\t";
-        cout << "Name " << data.description << "\t";
-        cout << "Cost " << data.cost << "\t";
-        cout << "Quantity " << data.quantity << "\t";
-        cout << "aisle # " << data.aisle << endl;
+        cout << "UPC " << setw(10) << left << data.upc_code << "\t";
+        cout << "Name " << setw(10) << left << data.description << "\t";
+        cout << "Cost " << setw(10) << left << data.cost << "\t";
+        cout << "Quantity " << setw(10) << left << data.quantity << "\t";
+        cout << "aisle # " << setw(10) << left << data.aisle << endl;
     }
 }
-
-
+//giving a copy of the list to print out the value from lowest UPC ->
+void sort_and_print(Link_list list)
+{
+    if(list.list_count() == 0)
+    {
+        cout << "There are item in the list" << endl;
+    }
+    else
+    {
+        while(list.list_count() != 0)
+        {
+            print_item(list.traverse_list());
+            //take out that lowest node in virutal list
+            //also reduce list_count by 1
+            list.delete_node(list.traverse_list().upc_code);
+        }
+    }
+}
 
 
 
