@@ -77,7 +77,7 @@ item Link_list::retrieve_node(int searchUPC)
 {
     curr = head;
     //loop until last node or data found 
-	while (curr != NULL && curr->return_structure().upc_code != searchUPC)
+    while (curr != NULL && curr->return_structure().upc_code != searchUPC)
     {
         curr = curr->return_next();
     }
@@ -86,10 +86,13 @@ item Link_list::retrieve_node(int searchUPC)
     {
         return curr->return_structure();
     }
-    //in case when item not found
-    item cant_find;
-    cant_find.description = "Error404";
-    return cant_find; 
+    else
+    {
+        //in case when item not found
+        item cant_find;
+        cant_find.description = "Error404";
+        return cant_find; 
+    }
 }
 
 bool Link_list::is_empty()

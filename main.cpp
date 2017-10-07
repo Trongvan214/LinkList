@@ -176,7 +176,6 @@ void printMenu()
     cout << "3) Retrieve an item" << endl;
     cout << "4) Print out all of the items" << endl;
     cout << "5) exit the program" << endl;
-    cout << "Enter 1-5" << endl;
 }
 
 void program()
@@ -185,6 +184,7 @@ void program()
     int user_input;
     do
     {
+        cout << "Enter 1-5" << endl;
         cin >> user_input;
         if(user_input == 1)
         {
@@ -211,6 +211,7 @@ void ask_info(item *new_item)
 {
     cout << "Enter UPC code: ";
     cin >> new_item->upc_code;
+    cin.ignore();
     cout << "Enter description: ";
     getline(cin,new_item->description);
     cout << "Enter quantity: ";
@@ -224,7 +225,7 @@ void ask_info(item *new_item)
 void search_list(Link_list *list,int choice)
 {
     int search_UPC;
-    cout << "Enter item to delete:(UPC) ";
+    cout << "Enter item:(UPC) ";
     cin >>  search_UPC;
     print_item(list->retrieve_node(search_UPC));
     //delete case
@@ -246,9 +247,9 @@ void search_list(Link_list *list,int choice)
 
 void print_item(item data)
 {
-    if(data.description.compare("Error404"))
+    if(data.description.compare("Error404") == 0)
     {
-        cout << "Invalid Code or Item don't exisit " << endl;
+        cout << "Invalid Code or Item don't exist " << endl;
     }
     else 
     {
