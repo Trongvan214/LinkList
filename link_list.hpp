@@ -17,5 +17,4 @@ class Link_list {
         int list_count();
         //void destroy_list();
 };
-
 #endif

@@ -1,8 +1,7 @@
-#include <iostream>
-
 #include "link_list.hpp"
 #include "node.hpp"
 
+//setting up the link list
 Link_list::Link_list()
 {
     tail = NULL;
@@ -11,6 +10,7 @@ Link_list::Link_list()
     head = NULL;
     len = 0;
 }
+//put in a new node at the end
 void Link_list::insert_node(item new_item)
 {
     //make a new dynamic memory is past in data for new item
@@ -39,6 +39,7 @@ void Link_list::insert_node(item new_item)
     //increase count 
     len++;
 }
+//delete a node
 void Link_list::delete_node(int searchUPC)
 {
     prev = NULL;
@@ -68,11 +69,8 @@ void Link_list::delete_node(int searchUPC)
         //decrease node count
         len--;
     }
-    else 
-    {
-        cout << "sometime is wrong no node" << endl;
-    }
 }
+//search through all the nodes and return node data with the match UPC code
 item Link_list::retrieve_node(int searchUPC)
 {
     curr = head;
@@ -94,7 +92,7 @@ item Link_list::retrieve_node(int searchUPC)
         return error; 
     }
 }
-
+//check if there are nodes or not
 bool Link_list::is_empty()
 {
     if(list_count() == 0 || head == NULL)
@@ -106,10 +104,12 @@ bool Link_list::is_empty()
         return false;
     }
 }
+//return how nodes are in the link list
 int Link_list::list_count()
 {
     return len;
 }
+//return ptr to the array of all nodes UPC codes
 int* Link_list::traverse_list(int arr[], int SIZE)
 {
     curr = head;
@@ -122,21 +122,6 @@ int* Link_list::traverse_list(int arr[], int SIZE)
         index++;
     }
     return arr;
-        
-
 }
-/*void Link_list::destroy_list()
-{
-    curr = head;
-	next = head;
-	while (curr != NULL)
-    {
-        curr = curr->next;
-		delete next;
-		next = curr;
-    }	
-	head = NULL;
-	count = 0;
-}*/
 
 

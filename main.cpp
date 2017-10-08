@@ -149,16 +149,19 @@ Number of nodes – call list count function
 void printMenu();
 void program();
 void ask_info(item *new_item);
-void search_list(Link_list *list,int choice = 0);
-void print_item(item data);
-void sort_and_print(Link_list list, int arr[], int ARRSIZE);
+//have default choice value
+void search_list(Link_list *list,bool delete_node = false);
+void print_item(item data, string end_how = "\n");
+void sort_and_print(Link_list list);
 //void putInFile();
 
 using namespace std;
 
 int main() 
 {
+    //
     ifstream read("grocerylist.txt");
+    //if grocerylist.txt exists read it
     if(read.good())
     {
         
@@ -175,13 +178,16 @@ int main()
             if(user_input == 1)
             {
                 item new_item;
+                //ask item details
                 ask_info(&new_item);
+                //add a new item (node)
                 grocery_list.insert_node(new_item);
             }
             else if(user_input == 2)
             {
-                //past in choice 1 for delete
-                search_list(&grocery_list,1);
+                //search for UPC code
+                //past in true for delete node case 
+                search_list(&grocery_list,true);
             }
             else if(user_input == 3)
             {
@@ -189,19 +195,14 @@ int main()
             }
             else if(user_input == 4)
             {
-                const int ARRSIZE = grocery_list.list_count();
-                
-                //array that will hold all UPC codes values
-                int hold_UPCcode[ARRSIZE];
-                
                 //print out all items
-                sort_and_print(grocery_list, hold_UPCcode, ARRSIZE);
+                sort_and_print(grocery_list);
             }
         } while(user_input != 5);
         //putInFile();
     } 
 }
-
+//this function that print out infomation how to use program
 void printMenu()
 {
     cout << "1) Add a grocery item" << endl;
@@ -211,6 +212,7 @@ void printMenu()
     cout << "5) exit the program" << endl;
 }
 
+//this function write ask the users for data about the item
 void ask_info(item *new_item)
 {
     cout << "Enter UPC code: ";
@@ -226,14 +228,18 @@ void ask_info(item *new_item)
     cin >> new_item->aisle;
 }
 
-void search_list(Link_list *list,int choice)
+//ask the users and search for that item (node) 
+void search_list(Link_list *list,bool delete_node)
 {
     int search_UPC;
     cout << "Enter item:(UPC) ";
     cin >>  search_UPC;
-    print_item(list->retrieve_node(search_UPC));
-    //deleting node case
-    if(choice == 1)
+    item data = list->retrieve_node(search_UPC);
+    print_item(data);
+    
+    //this part only apply when deleting item (node)
+    //ask for comfirmation
+    if(delete_node && data.description.compare("Error404") != 0)
     {
         char comfirm;
         cout << "Confirm delete (y/n)? "; 
@@ -249,8 +255,10 @@ void search_list(Link_list *list,int choice)
     }
 }
 
-void print_item(item data)
+//given item this function will print out all it's details
+void print_item(item data, string end_how)
 {
+    //if retrieve_item return a error item 
     if(data.description.compare("Error404") == 0)
     {
         cout << "Invalid Code or Item don't exist " << endl;
@@ -261,13 +269,17 @@ void print_item(item data)
         cout << setw(10) << left << data.description << "\t";
         cout << setw(10) << left << data.quantity << "\t";
         cout << "$" << setw(10) << left << data.cost << "\t";
-        cout << "Aisle " << setw(10) << left << data.aisle << endl;
+        cout << "Aisle " << setw(10) << left << data.aisle << end_how;
     }
 }
-//sort the items by UPC codes
-void sort_and_print(Link_list list, int arr[], int length)
+//sort the items by UPC codes and print all items out 
+void sort_and_print(Link_list list)
 {
-    int* arr_of_UPC = list.traverse_list(arr,length);
+    int length = list.list_count();
+    //array that will hold all UPC codes values
+    int hold_UPCcode[length];
+    //pointer that to the return pointer from traverse function
+    int* arr_ptr = list.traverse_list(hold_UPCcode,length);
     //no items case
     if(length == 0)
     {
@@ -284,11 +296,11 @@ void sort_and_print(Link_list list, int arr[], int length)
             swapped = false;
             for(int i = 0; i < length-1; i++)
             {
-                if(arr_of_UPC[i] > arr_of_UPC[i+1])
+                if(arr_ptr[i] > arr_ptr[i+1])
                 {
-                    temp = arr_of_UPC[i];
-                    arr_of_UPC[i] = arr_of_UPC[i+1];
-                    arr_of_UPC[i+1] = temp;
+                    temp = arr_ptr[i];
+                    arr_ptr[i] = arr_ptr[i+1];
+                    arr_ptr[i+1] = temp;
                     swapped = true;
                 }
             }
@@ -296,7 +308,11 @@ void sort_and_print(Link_list list, int arr[], int length)
         //print out all items 
         for(int i = 0; i < length; i++)
         {
-            print_item(list.retrieve_node(arr_of_UPC[i]));
+            item data = list.retrieve_node(arr_ptr[i]);
+            Node totalCost(data);
+            //print with tab at the end for total cost
+            print_item(data, "\t");
+            cout << "Total Cost $" << totalCost.process_data() << endl;
         }
     }
 }
