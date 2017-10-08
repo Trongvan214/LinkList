@@ -110,41 +110,19 @@ int Link_list::list_count()
 {
     return len;
 }
-item Link_list::traverse_list()
+int* Link_list::traverse_list(int arr[], int SIZE)
 {
     curr = head;
-    int lowestUPC;
+    int index = 0;
     //loop through all nodes
 	while(curr != NULL)
     {
-        prev = curr;
-        //if 1 node
-        if(list_count() == 1)
-        {
-            lowestUPC = curr->return_UPC_code();
-        }
-        //if 0 node
-        else if(list_count() == 0)
-        {
-            cout << "This case is impossible" << endl;
-        }
-        //if more than 1
-        else 
-        {
-            Node* next = curr->return_next();
-            if(curr->return_UPC_code() > next->return_UPC_code())
-            {
-                lowestUPC = next->return_UPC_code();
-            }
-            else 
-            {
-                lowestUPC = curr->return_UPC_code();
-            }
-        }
-        curr = curr->return_next();
+        arr[index] = curr->return_UPC_code();
+        curr = curr->return_next(); 
+        index++;
     }
-    //return node with the lowest UPC value;
-    return retrieve_node(lowestUPC); 
+    return arr;
+        
 
 }
 /*void Link_list::destroy_list()

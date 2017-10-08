@@ -151,7 +151,7 @@ void program();
 void ask_info(item *new_item);
 void search_list(Link_list *list,int choice = 0);
 void print_item(item data);
-void sort_and_print(Link_list list);
+void sort_and_print(Link_list list, int arr[], int ARRSIZE);
 //void putInFile();
 
 using namespace std;
@@ -189,8 +189,13 @@ int main()
             }
             else if(user_input == 4)
             {
+                const int ARRSIZE = grocery_list.list_count();
+                
+                //array that will hold all UPC codes values
+                int hold_UPCcode[ARRSIZE];
+                
                 //print out all items
-                sort_and_print(grocery_list);
+                sort_and_print(grocery_list, hold_UPCcode, ARRSIZE);
             }
         } while(user_input != 5);
         //putInFile();
@@ -227,7 +232,7 @@ void search_list(Link_list *list,int choice)
     cout << "Enter item:(UPC) ";
     cin >>  search_UPC;
     print_item(list->retrieve_node(search_UPC));
-    //delete case
+    //deleting node case
     if(choice == 1)
     {
         char comfirm;
@@ -252,28 +257,46 @@ void print_item(item data)
     }
     else 
     {
-        cout << "UPC " << setw(10) << left << data.upc_code << "\t";
-        cout << "Name " << setw(10) << left << data.description << "\t";
-        cout << "Cost " << setw(10) << left << data.cost << "\t";
-        cout << "Quantity " << setw(10) << left << data.quantity << "\t";
-        cout << "aisle # " << setw(10) << left << data.aisle << endl;
+        cout << setw(10) << left << data.upc_code << "\t";
+        cout << setw(10) << left << data.description << "\t";
+        cout << setw(10) << left << data.quantity << "\t";
+        cout << "$" << setw(10) << left << data.cost << "\t";
+        cout << "Aisle " << setw(10) << left << data.aisle << endl;
     }
 }
-//giving a copy of the list to print out the value from lowest UPC ->
-void sort_and_print(Link_list list)
+//sort the items by UPC codes
+void sort_and_print(Link_list list, int arr[], int length)
 {
-    if(list.list_count() == 0)
+    int* arr_of_UPC = list.traverse_list(arr,length);
+    //no items case
+    if(length == 0)
     {
-        cout << "There are item in the list" << endl;
+        cout << "There are no item added" << endl;
     }
-    else
+    //1 or more case
+    else 
     {
-        while(list.list_count() != 0)
+        int temp;
+        bool swapped;
+        //simple sort l to h
+        do
         {
-            print_item(list.traverse_list());
-            //take out that lowest node in virutal list
-            //also reduce list_count by 1
-            list.delete_node(list.traverse_list().upc_code);
+            swapped = false;
+            for(int i = 0; i < length-1; i++)
+            {
+                if(arr_of_UPC[i] > arr_of_UPC[i+1])
+                {
+                    temp = arr_of_UPC[i];
+                    arr_of_UPC[i] = arr_of_UPC[i+1];
+                    arr_of_UPC[i+1] = temp;
+                    swapped = true;
+                }
+            }
+        } while(swapped); 
+        //print out all items 
+        for(int i = 0; i < length; i++)
+        {
+            print_item(list.retrieve_node(arr_of_UPC[i]));
         }
     }
 }
