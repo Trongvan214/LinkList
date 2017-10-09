@@ -116,7 +116,7 @@ Number of nodes – call list count function
 #include <iostream>
 #include <iomanip>
 
-#include "link_list.hpp"
+#include "linked_list.hpp"
 #include "node.hpp"
 
 void print_data(Node* curr, ostream& stream);

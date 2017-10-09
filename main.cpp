@@ -9,7 +9,7 @@
 #include <fstream>
 #include <iomanip>
 
-#include "link_list.hpp"
+#include "linked_list.hpp"
 #include "node.hpp"
 
 void printMenu();
