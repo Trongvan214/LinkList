@@ -16,6 +16,7 @@ class Node
     item data;
     Node* next;
     public: 
+        Node(void);
         Node(item new_data);
         void change_pointer(Node *next_ptr);
         Node* return_next();

@@ -3,6 +3,16 @@
 
 using namespace std;
 
+Node::Node()
+{
+    data.upc_code = 0;
+    data.quantity= 0;
+    data.aisle = 0;
+    data.cost = 0;
+    data.description = "";
+    next = NULL;
+}
+
 Node::Node(item new_data)
 {
     data = new_data;
