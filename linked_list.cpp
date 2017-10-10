@@ -87,7 +87,6 @@ Member function
 
 Member function
 	destroy_list – deletes all data in list
-
 	input:	None
 	output:	Entire list is deleted
 	return:	None
@@ -101,6 +100,18 @@ Member function
 	end while
 	head = NULL
 	count = 0
+
+Member function 
+*   put_in_file
+*   input: none
+*   output: put link list in a file
+*   return none
+
+Memeber function
+*   duplicate_check
+*   input: data
+*   output: none
+*   return true if that data.upc exists in link false if it doesn't
 
 
 Create list – make an instance of class linked list
@@ -119,7 +130,7 @@ Number of nodes – call list count function
 #include "linked_list.hpp"
 #include "node.hpp"
 
-void print_data(Node* curr, ostream& stream);
+void print_data(Node* curr);
 
 //setting up the link list
 Link_list::Link_list()
@@ -133,11 +144,8 @@ Link_list::Link_list()
 //put in a new node UPC order
 void Link_list::insert_node(item new_item)
 {
-    if(duplicate_check(new_item))
-    {
-        cout << "It's a copy" << endl;
-    }
-    else
+    //check to see if new data is new and isn't a dup
+    if(!duplicate_check(new_item))
     {
         //allocating dynamic memory
         Node *ptr = new Node(new_item);
@@ -163,7 +171,7 @@ void Link_list::insert_node(item new_item)
         //increase total node
         len++;
         
-        }
+    }
 }
 //delete a node
 void Link_list::delete_node(int searchUPC)
@@ -241,22 +249,22 @@ void Link_list::traverse_list()
     curr = head;
 	while(curr != NULL)
     {
-        print_data(curr,cout);
+        print_data(curr);
         curr = curr->return_next();
     }
 }
 
 //print out all data given address pointer
-void print_data(Node* curr, ostream& stream)
+void print_data(Node* curr)
 {
     item data = curr->return_structure();
-    stream << setprecision(2) << fixed;
-    stream << setw(3) << left << data.upc_code << "\t";
-    stream << setw(3) << left << data.description << "\t";
-    stream << setw(3) << left << data.quantity << "\t";
-    stream << "$" << setw(3) << left << data.cost << "\t";
-    stream << "Aisle " << setw(3) << left << data.aisle << "\t";
-    stream << "Total Cost " << setw(3) << left << curr->process_data() << endl;
+    cout << setprecision(2) << fixed;
+    cout << setw(5) << left << data.upc_code << "\t";
+    cout << setw(5) << left << data.description << "\t";
+    cout << setw(5) << left << data.quantity << "\t";
+    cout << "$" << setw(5) << left << data.cost << "\t";
+    cout << "Aisle " << setw(5) << left << data.aisle << "\t";
+    cout << "Total Cost " << setw(5) << left << curr->process_data() << endl;
 }
 
 //destroy everthing
@@ -274,24 +282,32 @@ void Link_list::destroy_list()
     len = 0;
 }
 
+//put all the nodes into a file
 void Link_list::put_in_file()
 {
     ofstream write("grocerylist.txt");
     curr = head;
     while(curr != NULL)
     {
-        print_data(curr,write);
+        item data = curr->return_structure();
+        write << setprecision(2) << fixed;
+        write << data.upc_code << "\t";
+        write << data.quantity << "\t";
+        write << data.cost << "\t";
+        write << data.aisle << "\t";
+        write << data.description << endl;
         curr = curr->return_next();
     }
     write.close();
 }
 
+//check to see if given upc code exists in link list
 bool Link_list::duplicate_check(item data)
 {
     curr = head;
     while(curr != NULL)
     {
-        if(data.upc_code == curr->return_UPC_code())
+        if(curr->compare_UPC(data.upc_code))
         {
             return true;
         }

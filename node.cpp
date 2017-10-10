@@ -49,5 +49,6 @@ bool Node::compare_UPC(int given_UPC)
 
 float Node::process_data()
 {
+    //return the total cost for that item
     return data.cost*data.quantity;
 }
